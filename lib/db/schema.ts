@@ -78,12 +78,15 @@ export const dropsRelations = relations(drops, ({ one, many }) => ({
 // ========================================
 export const orders = pgTable('orders', {
   id: text('id').primaryKey().$defaultFn(() => `ord_${nanoid()}`),
-  dropId: text('drop_id').notNull().references(() => drops.id, { onDelete: 'cascade' }),
+  dropId: text('drop_id').references(() => drops.id, { onDelete: 'cascade' }), // Optional: for drop-based orders
+  productId: text('product_id').references(() => products.id, { onDelete: 'cascade' }), // For direct product orders
+  creatorId: text('creator_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   customerEmail: text('customer_email').notNull(),
   customerName: text('customer_name'),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  status: text('status').notNull().default('pending'), // pending, processing, shipped, delivered, refunded, cancelled
-  stripePaymentIntentId: text('stripe_payment_intent_id').notNull().unique(),
+  status: text('status').notNull().default('pending'), // pending, paid, processing, shipped, delivered, refunded, cancelled, failed
+  stripeSessionId: text('stripe_session_id').unique(), // Checkout session ID
+  stripePaymentIntentId: text('stripe_payment_intent_id').unique(), // Payment intent ID (set after payment)
   stripePaymentStatus: text('stripe_payment_status'), // succeeded, pending, failed
   shippingAddress: json('shipping_address').$type<{
     line1: string;
@@ -106,6 +109,14 @@ export const ordersRelations = relations(orders, ({ one }) => ({
     fields: [orders.dropId],
     references: [drops.id],
   }),
+  product: one(products, {
+    fields: [orders.productId],
+    references: [products.id],
+  }),
+  creator: one(users, {
+    fields: [orders.creatorId],
+    references: [users.id],
+  }),
 }));
 
 // ========================================
@@ -114,8 +125,9 @@ export const ordersRelations = relations(orders, ({ one }) => ({
 export const payouts = pgTable('payouts', {
   id: text('id').primaryKey().$defaultFn(() => `pay_${nanoid()}`),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  orderId: text('order_id').references(() => orders.id, { onDelete: 'cascade' }), // Link to specific order
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  status: text('status').notNull().default('pending'), // pending, processing, paid, failed
+  status: text('status').notNull().default('pending'), // pending, processing, paid, failed, cancelled
   stripeTransferId: text('stripe_transfer_id'),
   metadata: json('metadata').$type<{
     dropId?: string;

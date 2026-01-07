@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/lib/db";
-import { orders, payouts } from "@/lib/db/schema";
+import { orders, payouts, products, users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
+  apiVersion: "2025-12-15.clover",
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -101,10 +101,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
       // Create payout record
       await db.insert(payouts).values({
-        creatorId,
+        userId: creatorId,
+        orderId: order.id,
         amount: creatorEarnings.toString(),
         status: "pending",
-        orderId: order.id,
       });
 
       console.log(`Order ${order.id} marked as paid, payout created for $${creatorEarnings}`);
@@ -114,10 +114,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       const { emailTemplates } = await import("@/lib/email/templates");
 
       // Get product and creator details
-      const { products, users } = await import("@/lib/db/schema");
-      const { db } = await import("@/lib/db");
-      const { eq } = await import("drizzle-orm");
-
       const [product] = await db
         .select()
         .from(products)
@@ -132,17 +128,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
       if (product && creator) {
         // Send order confirmation to customer
-        const customerEmail = emailTemplates.orderConfirmation({
+        const customerEmailData = emailTemplates.orderConfirmation({
           customerName: customerName || "Customer",
           productName: product.name,
           price: order.amount,
           creatorUsername: creator.username,
           orderId: order.id,
         });
-        await sendEmail({ ...customerEmail, to: customerEmail || order.customerEmail });
+        await sendEmail({ ...customerEmailData, to: customerEmail || order.customerEmail });
 
         // Send new order alert to creator
-        const creatorEmail = emailTemplates.newOrderAlert({
+        const creatorEmailData = emailTemplates.newOrderAlert({
           creatorName: creator.name || creator.username,
           customerName: customerName || "A customer",
           productName: product.name,
@@ -150,7 +146,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
           earnings: creatorEarnings.toString(),
           orderId: order.id,
         });
-        await sendEmail({ ...creatorEmail, to: creator.email });
+        await sendEmail({ ...creatorEmailData, to: creator.email });
       }
     }
   } catch (error) {

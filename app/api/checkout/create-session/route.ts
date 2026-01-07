@@ -5,7 +5,7 @@ import { products, orders } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
+  apiVersion: "2025-12-15.clover",
 });
 
 export async function POST(request: NextRequest) {
@@ -76,14 +76,14 @@ export async function POST(request: NextRequest) {
       creatorId: product.userId,
       customerEmail: email,
       customerName: name,
-      shippingAddress: JSON.stringify(shippingAddress),
+      shippingAddress: shippingAddress,
       amount: product.price,
       status: "pending",
       stripeSessionId: session.id,
     });
 
     return NextResponse.json(
-      { sessionId: session.id },
+      { sessionId: session.id, url: session.url },
       { status: 200 }
     );
   } catch (error) {

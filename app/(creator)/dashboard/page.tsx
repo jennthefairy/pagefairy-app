@@ -147,7 +147,7 @@ export default function DashboardPage() {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Card className="hover:border-primary/50 transition-colors cursor-pointer" asChild>
+              <Card className="hover:border-primary/50 transition-colors cursor-pointer">
                 <Link href="/dashboard/caption-generator">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">

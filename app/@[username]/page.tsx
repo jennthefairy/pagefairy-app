@@ -7,6 +7,8 @@ import { users, products } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { Sparkles, Package, Shield, Truck, CreditCard } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: Promise<{ username: string }>;
 };

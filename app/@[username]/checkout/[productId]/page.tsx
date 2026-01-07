@@ -7,9 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, ArrowLeft, Package, Shield, Lock } from "lucide-react";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 type Product = {
   id: string;
@@ -94,15 +91,10 @@ export default function CheckoutPage() {
       }
 
       // Redirect to Stripe Checkout
-      const stripe = await stripePromise;
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-
-        if (error) {
-          alert(error.message);
-        }
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Failed to create checkout session");
       }
     } catch (error) {
       console.error("Checkout error:", error);

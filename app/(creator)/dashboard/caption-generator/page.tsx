@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Copy, Check, ArrowLeft, Loader2, Instagram } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 type Product = {
   id: string;
   name: string;
