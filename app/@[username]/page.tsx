@@ -16,6 +16,11 @@ type Props = {
 export default async function BioLinkPage({ params }: Props) {
   const { username } = await params;
 
+  // Return not found if username is undefined (e.g., when accessing homepage)
+  if (!username) {
+    notFound();
+  }
+
   // Remove @ symbol if present
   const cleanUsername = username.startsWith("@") ? username.slice(1) : username;
 
@@ -200,6 +205,15 @@ export default async function BioLinkPage({ params }: Props) {
 
 export async function generateMetadata({ params }: Props) {
   const { username } = await params;
+
+  // Return default metadata if username is undefined
+  if (!username) {
+    return {
+      title: "PageFairy",
+      description: "Creator platform for lash products",
+    };
+  }
+
   const cleanUsername = username.startsWith("@") ? username.slice(1) : username;
 
   const [user] = await db
