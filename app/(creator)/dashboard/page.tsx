@@ -142,6 +142,46 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Quick Actions */}
+        {activeProducts.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card className="hover:border-primary/50 transition-colors cursor-pointer" asChild>
+                <Link href="/dashboard/caption-generator">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-lg fairy-gradient flex items-center justify-center">
+                        <Sparkles className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-1">AI Caption Generator</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Create engaging social media captions
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Link>
+              </Card>
+
+              <Card className="hover:border-primary/50 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                      <TrendingUp className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1">Analytics</h3>
+                      <p className="text-sm text-muted-foreground">Coming soon</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+
         {/* Products */}
         <Card>
           <CardHeader>

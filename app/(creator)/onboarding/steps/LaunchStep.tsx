@@ -43,6 +43,7 @@ export default function LaunchStep({ data, onBack }: Props) {
           lashType: data.lashType,
           price: data.price,
           imageUrl: data.imageUrl,
+          description: data.description,
           status: "active",
         }),
       });

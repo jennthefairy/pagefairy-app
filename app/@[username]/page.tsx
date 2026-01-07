@@ -126,8 +126,10 @@ export default async function BioLinkPage({ params }: Props) {
                     </div>
                   </div>
 
-                  {product.description && (
-                    <p className="text-muted-foreground">{product.description}</p>
+                  {(product.description || product.aiGeneratedDescription) && (
+                    <p className="text-muted-foreground">
+                      {product.description || product.aiGeneratedDescription}
+                    </p>
                   )}
 
                   {/* Features */}

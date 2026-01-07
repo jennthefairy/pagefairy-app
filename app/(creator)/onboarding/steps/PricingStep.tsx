@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { DollarSign, Info } from "lucide-react";
+import { DollarSign, Info, Sparkles, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { OnboardingData } from "../page";
 
 type Props = {
@@ -17,18 +18,53 @@ type Props = {
 
 export default function PricingStep({ data, onNext, onBack }: Props) {
   const [price, setPrice] = useState(data.price);
+  const [description, setDescription] = useState(data.description);
+  const [generatingDescription, setGeneratingDescription] = useState(false);
 
   const baseCost = 15; // Example base cost
   const parsePrice = parseFloat(price) || 0;
   const yourEarnings = Math.max(0, parsePrice - baseCost);
   const profitMargin = parsePrice > 0 ? ((yourEarnings / parsePrice) * 100).toFixed(0) : 0;
 
+  const handleGenerateDescription = async () => {
+    if (!data.productName || !data.lashType || !price) {
+      alert("Please complete product setup and pricing first");
+      return;
+    }
+
+    setGeneratingDescription(true);
+    try {
+      const response = await fetch("/api/ai/generate-description", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productName: data.productName,
+          lashType: data.lashType,
+          price,
+          tone: "casual",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setDescription(result.description);
+      } else {
+        alert(result.error || "Failed to generate description");
+      }
+    } catch (error) {
+      alert("Failed to generate description. Please try again.");
+    } finally {
+      setGeneratingDescription(false);
+    }
+  };
+
   const handleNext = () => {
     if (!price || parseFloat(price) < baseCost) {
       alert(`Price must be at least $${baseCost} to cover costs`);
       return;
     }
-    onNext({ price });
+    onNext({ price, description });
   };
 
   const suggestedPrices = [
@@ -137,6 +173,46 @@ export default function PricingStep({ data, onNext, onBack }: Props) {
             Higher prices work great if you have a strong following!
           </p>
         </div>
+
+        {/* AI Description Generator */}
+        {parsePrice >= baseCost && (
+          <div className="space-y-3 pt-2 border-t">
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium">
+                Product Description <span className="text-muted-foreground">(Optional)</span>
+              </label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleGenerateDescription}
+                disabled={generatingDescription}
+              >
+                {generatingDescription ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Generate with AI
+                  </>
+                )}
+              </Button>
+            </div>
+            <Textarea
+              placeholder="Add a description of your lashes, or let AI write it for you..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="resize-none"
+            />
+            <p className="text-xs text-muted-foreground">
+              A compelling description helps customers understand why they'll love your lashes
+            </p>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex gap-3 pt-4">
