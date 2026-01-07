@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* PageFairy Brand Colors */
+  --background: #FAFAFA;
+  --foreground: #171717;
+  --card: #F5F5F5;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #FF69B4; /* Hot Pink */
+  --primary-foreground: #ffffff;
+  --secondary: #9333EA; /* Purple */
+  --secondary-foreground: #ffffff;
+  --muted: #E5E5E5;
+  --muted-foreground: #404040;
+  --accent: #F59E0B; /* Amber */
+  --accent-foreground: #171717;
+  --destructive: #EF4444; /* Red */
+  --destructive-foreground: #ffffff;
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: #FF69B4;
+  --radius: 0.75rem;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: ease-in-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --card: #171717;
+    --card-foreground: #ededed;
+    --popover: #171717;
+    --popover-foreground: #ededed;
+    --muted: #262626;
+    --muted-foreground: #a3a3a3;
+    --border: #262626;
+    --input: #262626;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom Utilities */
+.fairy-gradient {
+  background: linear-gradient(135deg, #FF69B4 0%, #9333EA 100%);
+}
+
+.fairy-text-gradient {
+  background: linear-gradient(135deg, #FF69B4 0%, #9333EA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
