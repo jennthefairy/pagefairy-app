@@ -1,0 +1,18 @@
+{
+  "build": {
+    "command": "npm run build",
+    "output_directory": ".next"
+  },
+  "routes": [
+    {
+      "pattern": "/*",
+      "middleware": ["next"]
+    }
+  ],
+  "preview": {
+    "alias": ["preview.pagefairy.com"]
+  },
+  "production": {
+    "alias": ["pagefairy.com", "www.pagefairy.com"]
+  }
+}
