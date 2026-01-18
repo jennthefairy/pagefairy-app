@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ExternalLink, Package } from "lucide-react";
@@ -15,8 +14,7 @@ type Props = {
 };
 
 export default function PreviewStep({ data, onNext, onBack }: Props) {
-  const { data: session } = useSession();
-  const username = session?.user?.username || "yourname";
+  const username = "yourname";
   const bioLinkUrl = `pagefairy.com/@${username}`;
 
   return (

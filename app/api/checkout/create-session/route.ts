@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+<<<<<<< HEAD
     // Create order record (status: pending until payment complete)
     await db.insert(orders).values({
       productId: product.id,
@@ -82,6 +83,8 @@ export async function POST(request: NextRequest) {
       stripeSessionId: session.id,
     });
 
+=======
+>>>>>>> d4380c0 (commit)
     return NextResponse.json(
       { sessionId: session.id, url: session.url },
       { status: 200 }

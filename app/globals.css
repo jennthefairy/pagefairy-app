@@ -3,7 +3,44 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+<<<<<<< HEAD
 @layer base {
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* PageFairy Brand Colors */
+  --background: #FAFAFA;
+  --foreground: #171717;
+  --card: #F5F5F5;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #FF69B4; /* Hot Pink */
+  --primary-foreground: #ffffff;
+  --secondary: #9333EA; /* Purple */
+  --secondary-foreground: #ffffff;
+  --muted: #E5E5E5;
+  --muted-foreground: #404040;
+  --accent: #F59E0B; /* Amber */
+  --accent-foreground: #171717;
+  --destructive: #EF4444; /* Red */
+  --destructive-foreground: #ffffff;
+  --border: #E5E5E5;
+  --input: #E5E5E5;
+  --ring: #FF69B4;
+  --radius: 0.75rem;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+>>>>>>> d4380c0 (commit)
   :root {
     /* PageFairy Brand Colors */
     --background: 250 250 250;
