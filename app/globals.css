@@ -79,3 +79,43 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Hero ticker animation */
+@keyframes ticker-scroll {
+  0% { transform: translateY(0); }
+  15% { transform: translateY(-1.5em); }
+  30% { transform: translateY(-1.5em); }
+  45% { transform: translateY(-3em); }
+  60% { transform: translateY(-3em); }
+  75% { transform: translateY(-4.5em); }
+  90% { transform: translateY(-4.5em); }
+  100% { transform: translateY(0); }
+}
+
+.ticker-container {
+  height: 1.5em;
+  line-height: 1.5em;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.ticker-item {
+  animation: ticker-scroll 8s infinite ease-in-out;
+}
+
+/* Glassmorphism card style */
+.glass-card {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.logo-font {
+  font-family: var(--font-logo), serif;
+}
+
+.title-font {
+  font-family: var(--font-title), sans-serif;
+}

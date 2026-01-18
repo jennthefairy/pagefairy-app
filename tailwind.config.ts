@@ -53,6 +53,10 @@ const config: Config = {
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
+        cream: '#FBF7F0',
+        darkGreen: '#2D4A3E',
+        redAccent: '#B83B3B',
+        gold: '#C9A961',
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         card: {

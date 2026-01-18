@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Check } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -44,54 +42,57 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-100 p-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Sparkles className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold fairy-text-gradient">PageFairy</h1>
+          <div className="inline-flex items-center gap-2 mb-4 justify-center">
+            <Sparkles className="h-8 w-8 text-pink-400" />
+            <h1
+              className="text-4xl font-bold text-slate-800 mb-1"
+              style={{ fontFamily: "'Oleo Script', cursive" }}
+            >
+              PageFairy
+            </h1>
           </div>
-          <p className="text-muted-foreground">Start selling products without inventory</p>
+          <p className="text-slate-500 text-sm">
+            Get started for free. No credit card required.
+          </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Create your account</CardTitle>
-            <CardDescription>Launch your first product in minutes</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
+        <div className="w-full bg-white shadow-xl border rounded-2xl">
+          <div className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                <div className="p-3 rounded-lg bg-red-100 text-red-600 text-sm">
                   {error}
                 </div>
               )}
 
-              {/* Benefits */}
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Check className="h-4 w-4 text-success" />
-                  <span>No upfront inventory</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Check className="h-4 w-4 text-success" />
-                  <span>No shipping handling</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Check className="h-4 w-4 text-success" />
-                  <span>Get paid per order</span>
-                </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-slate-700" htmlFor="name">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  disabled={loading}
+                />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email
+                <label className="block text-sm font-medium text-slate-700" htmlFor="email">
+                  Email Address
                 </label>
-                <Input
+                <input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -100,48 +101,43 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
+                <label className="block text-sm font-medium text-slate-700" htmlFor="password">
                   Password
                 </label>
-                <Input
+                <input
                   id="password"
                   type="password"
                   placeholder="••••••••"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-transparent bg-white"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
-                  minLength={8}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Must be 8+ characters with uppercase, lowercase, and number
-                </p>
               </div>
-            </CardContent>
 
-            <CardFooter className="flex flex-col gap-4">
-              <Button
-                type="submit"
-                className="w-full"
-                variant="gradient"
-                disabled={loading}
-              >
-                {loading ? "Creating account..." : "Create account"}
-              </Button>
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  className="w-full btn text-white rounded-md py-2.5 text-sm font-medium"
+                  style={{ backgroundColor: "#ff7096" }}
+                  disabled={loading}
+                >
+                  {loading ? "Creating account..." : "Create Account"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
 
-              <p className="text-sm text-center text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:underline font-medium">
-                  Sign in
-                </Link>
-              </p>
-
-              <p className="text-xs text-center text-muted-foreground">
-                By signing up, you agree to our Terms of Service and Privacy Policy
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
+        <div className="text-center mt-4">
+          <p className="text-sm text-slate-600">
+            Already have an account?{" "}
+            <Link href="/login" className="text-pink-500 hover:underline font-medium">
+              Log In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

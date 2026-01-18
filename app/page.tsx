@@ -1,156 +1,175 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Sparkles, Package, CreditCard, Truck, TrendingUp } from "lucide-react";
+import { Sparkles, Users, Calendar, ShoppingBag, ArrowRight, X, Check } from "lucide-react";
 
 export default function HomePage() {
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubmitting(true);
+
+    try {
+      const response = await fetch("https://pf-catalogue.pcnbiz.workers.dev", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        setOverlayOpen(false);
+        setSuccess(false);
+        setEmail("");
+      }, 1500);
+    } catch (error) {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
-      {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold fairy-text-gradient">PageFairy</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login">
-              <Button variant="ghost">Sign in</Button>
-            </Link>
-            <Link href="/signup">
-              <Button variant="gradient">Get Started</Button>
-            </Link>
+    <div className="bg-cream min-h-screen overflow-x-hidden">
+      {/* Hero */}
+      <div className="px-6 pt-10 max-w-lg mx-auto">
+        <div className="flex justify-center mb-4">
+          <h1 className="logo-font text-gray-800 text-5xl tracking-wide text-center mb-6">Pagefairy</h1>
+        </div>
+
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FEF5E7] border border-gold/30 rounded-full shadow-sm">
+            <Sparkles className="w-4 h-4 text-gold stroke-[2]" />
+            <span className="text-sm font-medium text-gray-800">Limited seats available</span>
           </div>
         </div>
-      </header>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-32">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Turn Your Content Into{" "}
-            <span className="fairy-text-gradient">Products</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Sell lash products without inventory. No upfront costs, no shipping hassles. Get paid per order shipped.
-          </p>
-          <Link href="/signup">
-            <Button size="lg" variant="gradient" className="text-lg px-8 py-6 h-auto">
-              Add a Product to My Bio
-              <Sparkles className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          How It Works
+        <h2 className="title-font text-[44px] leading-tight font-bold text-center mb-5 text-gray-900">
+          Your <span className="text-redAccent">Beauty Skills</span>
+          <br />
+          Can Build <span className="text-redAccent">More</span> Than Just Appointments
         </h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 rounded-full fairy-gradient mx-auto mb-4 flex items-center justify-center">
-              <Package className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">1. Choose Product</h3>
-            <p className="text-muted-foreground">
-              Pick your lash style, set your price, and get your unique link
-            </p>
-          </Card>
 
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 rounded-full fairy-gradient mx-auto mb-4 flex items-center justify-center">
-              <TrendingUp className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">2. Share & Sell</h3>
-            <p className="text-muted-foreground">
-              Add link to bio, create content, and collect pre-orders
-            </p>
-          </Card>
+        <p className="text-center text-gray-800 text-[17px] leading-relaxed mb-10 px-2">
+          Most beauty creators trade time for money and that model has limits. We help creators turn skills into brands
+          using AI to test demand before launch.
+        </p>
+      </div>
 
-          <Card className="p-6 text-center">
-            <div className="w-12 h-12 rounded-full fairy-gradient mx-auto mb-4 flex items-center justify-center">
-              <CreditCard className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">3. Get Paid</h3>
-            <p className="text-muted-foreground">
-              Orders ship automatically, you receive your earnings
-            </p>
-          </Card>
+      {/* Features */}
+      <div className="w-full max-w-3xl mx-auto mb-10 px-6">
+        <div className="flex items-center justify-center gap-10 flex-wrap">
+          <div className="flex items-center gap-3">
+            <Users className="w-5 h-5 text-gray-800 stroke-[2]" />
+            <span className="text-[16px] text-gray-900 font-medium">Build an audience</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-gray-800 stroke-[2]" />
+            <span className="text-[16px] text-gray-900 font-medium">Improve online presence</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <ShoppingBag className="w-5 h-5 text-gray-800 stroke-[2]" />
+            <span className="text-[16px] text-gray-900 font-medium">Sell beyond services</span>
+          </div>
         </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <Card className="p-8 md:p-12 fairy-gradient text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-              Why Creators Love PageFairy
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="flex items-start gap-3">
-                <Truck className="h-6 w-6 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Zero Fulfillment</h3>
-                  <p className="text-white/90">We handle all production, packaging, and shipping</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Package className="h-6 w-6 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">No Inventory Risk</h3>
-                  <p className="text-white/90">Products are made only after orders come in</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CreditCard className="h-6 w-6 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Simple Payouts</h3>
-                  <p className="text-white/90">Get paid directly for every order shipped</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Sparkles className="h-6 w-6 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">Free to Launch</h3>
-                  <p className="text-white/90">No subscription, no upfront costs</p>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
+      </div>
 
       {/* CTA */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <h2 className="text-3xl md:text-5xl font-bold mb-6">
-          Ready to Launch Your First Product?
-        </h2>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Join creators who are turning their influence into income
-        </p>
-        <Link href="/signup">
-          <Button size="lg" variant="gradient" className="text-lg px-8 py-6 h-auto">
-            Get Started Free
-          </Button>
-        </Link>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t mt-20 py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <span className="font-semibold fairy-text-gradient">PageFairy</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2026 PageFairy. All rights reserved.
-            </p>
+      <div className="px-6 pb-10 max-w-lg mx-auto">
+        <button
+          type="button"
+          onClick={() => setOverlayOpen(true)}
+          className="w-full bg-orange-900 text-white rounded-xl py-5 mb-4 hover:bg-amber-900 transition-colors shadow-lg"
+          disabled={overlayOpen}
+        >
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <span className="text-[19px] font-semibold">Join the Private Waitlist</span>
+            <ArrowRight className="w-5 h-5 stroke-[2.5]" />
           </div>
+          <div className="text-[13px] text-white/70 font-normal">No credit card required</div>
+        </button>
+
+        <p className="text-center text-gray-700 text-[12px] px-4">PageFairy© 2026 | All Rights Reserved</p>
+      </div>
+
+      {/* Overlay */}
+      <div
+        className={`fixed inset-0 bg-yellow-700 z-[100] px-6 flex flex-col transform transition-transform duration-500 ease-in-out ${
+          overlayOpen ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        <div className="flex justify-end pt-8">
+          <button
+            type="button"
+            onClick={() => {
+              setOverlayOpen(false);
+              setSubmitting(false);
+              setSuccess(false);
+            }}
+            className="p-2 bg-cream/10 rounded-full"
+          >
+            <X className="text-cream w-8 h-8" />
+          </button>
         </div>
-      </footer>
+
+        <div className="flex-grow flex flex-col justify-center max-w-md mx-auto w-full">
+          <div className="mb-8">
+            <h3 className="logo-font text-cream text-4xl mb-4 text-center">Pagefairy</h3>
+            <h2 className="text-cream text-3xl font-bold text-center leading-tight">
+              Secure your spot in the beauty revolution
+            </h2>
+          </div>
+
+          {!success ? (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-cream/70 text-sm font-medium mb-2 ml-1" htmlFor="waitlist-email">
+                  Your Email Address
+                </label>
+                <input
+                  id="waitlist-email"
+                  type="email"
+                  required
+                  placeholder="name@example.com"
+                  className="w-full bg-transparent border-2 border-cream/20 rounded-2xl px-6 py-5 text-cream text-xl placeholder:text-cream/30 focus:outline-none focus:border-gold transition-colors"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={submitting}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-gold text-darkGreen font-bold text-xl py-5 rounded-2xl shadow-2xl hover:bg-white transition-all active:scale-95 disabled:opacity-70"
+                disabled={submitting}
+              >
+                {submitting ? "Processing..." : "Confirm My Access"}
+              </button>
+            </form>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-10">
+              <div className="bg-gold p-4 rounded-full mb-4">
+                <Check className="text-darkGreen w-12 h-12 stroke-[3]" />
+              </div>
+              <p className="text-cream font-bold text-2xl">Access Granted</p>
+            </div>
+          )}
+
+          <p className="text-cream/30 text-center text-sm mt-8">
+            By joining you agree to receive early access updates and brand building tips.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
