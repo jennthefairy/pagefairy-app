@@ -54,7 +54,7 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          dropId: params.orderId,
+          dropId: (params as any).productId,
           email,
           shippingAddress: {
             line1: address1,

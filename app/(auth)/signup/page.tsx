@@ -1,143 +1,148 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, Check, Package, Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sparkles, Check } from "lucide-react";
 
-function SuccessContent() {
-  const searchParams = useSearchParams();
+export default function SignupPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const sessionId = searchParams.get("session_id");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    if (!sessionId) {
-      router.push("/");
-      return;
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Something went wrong");
+        return;
+      }
+
+      // Redirect to login
+      router.push("/login?registered=true");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    // Here you could fetch order details from your API
-    // For now, we'll just show a success message
-    setLoading(false);
-  }, [searchParams, router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary animate-pulse" />
-          <span>Processing...</span>
-        </div>
-      </div>
-    );
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <Card className="border-success/50">
-          <CardHeader className="text-center pb-4">
-            <div className="w-20 h-20 rounded-full bg-success/10 mx-auto mb-4 flex items-center justify-center">
-              <Check className="h-10 w-10 text-success" />
-            </div>
-            <CardTitle className="text-3xl">Order Confirmed!</CardTitle>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <Sparkles className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold fairy-text-gradient">PageFairy</h1>
+          </div>
+          <p className="text-muted-foreground">Start selling products without inventory</p>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Create your account</CardTitle>
+            <CardDescription>Launch your first product in minutes</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <p className="text-center text-lg text-muted-foreground">
-              Thank you for your pre-order! Your lashes are reserved.
-            </p>
-
-            {/* What Happens Next */}
-            <div className="bg-muted/50 rounded-lg p-6 space-y-4">
-              <h3 className="font-semibold text-lg">What happens next:</h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Check your email</p>
-                    <p className="text-sm text-muted-foreground">
-                      We sent a confirmation to your email with order details
-                    </p>
-                  </div>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+                  {error}
                 </div>
+              )}
 
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Package className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Production begins</p>
-                    <p className="text-sm text-muted-foreground">
-                      Your lashes will be carefully crafted and quality checked
-                    </p>
-                  </div>
+              {/* Benefits */}
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-success" />
+                  <span>No upfront inventory</span>
                 </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Ships to you</p>
-                    <p className="text-sm text-muted-foreground">
-                      Expect your order in 2-3 weeks with free shipping
-                    </p>
-                  </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-success" />
+                  <span>No shipping handling</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-success" />
+                  <span>Get paid per order</span>
                 </div>
               </div>
-            </div>
 
-            <div className="border-l-4 border-success/50 bg-success/5 rounded-r-lg p-4">
-              <p className="text-sm">
-                <span className="font-semibold">💚 Thank you for supporting creators!</span> Your
-                purchase directly helps creators turn their passion into income.
-              </p>
-            </div>
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+              </div>
 
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Button variant="outline" className="flex-1" asChild>
-                <Link href="/">Browse More Creators</Link>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  minLength={8}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Must be 8+ characters with uppercase, lowercase, and number
+                </p>
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex flex-col gap-4">
+              <Button
+                type="submit"
+                className="w-full"
+                variant="gradient"
+                disabled={loading}
+              >
+                {loading ? "Creating account..." : "Create account"}
               </Button>
-              <Button variant="gradient" className="flex-1" asChild>
-                <Link href="/">
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Start Selling Too
+
+              <p className="text-sm text-center text-muted-foreground">
+                Already have an account?{" "}
+                <Link href="/login" className="text-primary hover:underline font-medium">
+                  Sign in
                 </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              </p>
 
-        {/* Support */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-muted-foreground">
-            Questions? Contact us at{" "}
-            <a href="mailto:support@pagefairy.com" className="text-primary hover:underline">
-              support@pagefairy.com
-            </a>
-          </p>
-        </div>
+              <p className="text-xs text-center text-muted-foreground">
+                By signing up, you agree to our Terms of Service and Privacy Policy
+              </p>
+            </CardFooter>
+          </form>
+        </Card>
       </div>
     </div>
-  );
-}
-
-export default function SuccessPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <Sparkles className="h-6 w-6 text-primary animate-pulse" />
-      </div>
-    }>
-      <SuccessContent />
-    </Suspense>
   );
 }
