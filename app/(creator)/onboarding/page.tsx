@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
@@ -11,6 +12,11 @@ import PricingStep from "./steps/PricingStep";
 import PreviewStep from "./steps/PreviewStep";
 import ChecklistStep from "./steps/ChecklistStep";
 import LaunchStep from "./steps/LaunchStep";
+import BrandAssetsStep from "./steps/BrandAssetsStep";
+import SocialLinksStep from "./steps/SocialLinksStep";
+import DomainSetupStep from "./steps/DomainSetupStep";
+import RegionalSettingsStep from "./steps/RegionalSettingsStep";
+import FinalReviewStep from "./steps/FinalReviewStep";
 
 export type OnboardingData = {
   productName: string;
@@ -18,10 +24,28 @@ export type OnboardingData = {
   imageUrl: string;
   price: string;
   description: string;
+  // Brand Assets
+  logo?: string | null;
+  brandColor?: string;
+  typography?: string;
+  theme?: string;
+  // Social Links
+  instagram?: string;
+  twitter?: string;
+  tiktok?: string;
+  youtube?: string;
+  linkedin?: string;
+  // Domain
+  domainType?: "subdomain" | "custom";
+  slug?: string;
+  customDomain?: string;
+  // Regional
+  targetCountries?: string[];
 };
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [currentStep, setCurrentStep] = useState(0);
   const [data, setData] = useState<OnboardingData>({
     productName: "",
@@ -31,12 +55,33 @@ export default function OnboardingPage() {
     description: "",
   });
 
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/login");
+    return null;
+  }
+
   const steps = [
     { title: "Welcome", component: WelcomeStep },
     { title: "Product Setup", component: ProductSetupStep },
     { title: "Pricing", component: PricingStep },
+    { title: "Brand Assets", component: BrandAssetsStep },
+    { title: "Social Links", component: SocialLinksStep },
+    { title: "Domain Setup", component: DomainSetupStep },
+    { title: "Regional Settings", component: RegionalSettingsStep },
     { title: "Preview", component: PreviewStep },
     { title: "Checklist", component: ChecklistStep },
+    { title: "Final Review", component: FinalReviewStep },
     { title: "Launch", component: LaunchStep },
   ];
 

@@ -146,7 +146,7 @@ export default function HomePage() {
               <span className="font-semibold fairy-text-gradient">PageFairy</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 PageFairy. All rights reserved.
+              © 2026 PageFairy. All rights reserved.
             </p>
           </div>
         </div>

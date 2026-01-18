@@ -10,11 +10,16 @@ import { Sparkles, Package, Shield, Truck, CreditCard } from "lucide-react";
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 };
 
 export default async function BioLinkPage({ params }: Props) {
-  const { username } = params;
+  const { username } = await params;
+
+  // Return not found if username is undefined (e.g., when accessing homepage)
+  if (!username) {
+    notFound();
+  }
 
   // Return not found if username is undefined (e.g., when accessing homepage)
   if (!username) {
@@ -22,7 +27,7 @@ export default async function BioLinkPage({ params }: Props) {
   }
 
   // Remove @ symbol if present
-  const cleanUsername = username?.startsWith("@") ? username.slice(1) : username ?? "";
+  const cleanUsername = username.startsWith("@") ? username.slice(1) : username;
 
   // Fetch user and their active products
   const [user] = await db
@@ -204,7 +209,6 @@ export default async function BioLinkPage({ params }: Props) {
 }
 
 export async function generateMetadata({ params }: Props) {
-<<<<<<< HEAD
   const { username } = await params;
 
   // Return default metadata if username is undefined
@@ -216,10 +220,6 @@ export async function generateMetadata({ params }: Props) {
   }
 
   const cleanUsername = username.startsWith("@") ? username.slice(1) : username;
-=======
-  const { username } = params;
-  const cleanUsername = username?.startsWith("@") ? username.slice(1) : username ?? "";
->>>>>>> d4380c0 (commit)
 
   const [user] = await db
     .select({

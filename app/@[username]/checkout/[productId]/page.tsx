@@ -91,22 +91,10 @@ export default function CheckoutPage() {
       }
 
       // Redirect to Stripe Checkout
-<<<<<<< HEAD
       if (data.url) {
         window.location.href = data.url;
       } else {
         alert("Failed to create checkout session");
-=======
-      const stripe = await stripePromise;
-      if (stripe) {
-        const { error } = await (stripe as any).redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-
-        if (error) {
-          alert(error.message);
-        }
->>>>>>> d4380c0 (commit)
       }
     } catch (error) {
       console.error("Checkout error:", error);

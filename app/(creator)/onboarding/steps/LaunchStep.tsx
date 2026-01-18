@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Copy, Check, ExternalLink, Instagram } from "lucide-react";
@@ -17,10 +18,11 @@ type Props = {
 
 export default function LaunchStep({ data, onBack }: Props) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const username = "yourname";
+  const username = session?.user?.username || "yourname";
   const bioLinkUrl = `pagefairy.com/@${username}`;
 
   const handleCopy = () => {

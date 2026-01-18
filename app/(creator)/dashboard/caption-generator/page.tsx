@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,11 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Copy, Check, ArrowLeft, Loader2, Instagram } from "lucide-react";
 
-<<<<<<< HEAD
 export const dynamic = 'force-dynamic';
-=======
-export const dynamic = "force-dynamic";
->>>>>>> d4380c0 (commit)
 
 type Product = {
   id: string;
@@ -23,6 +20,7 @@ type Product = {
 
 export default function CaptionGeneratorPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [platform, setPlatform] = useState<"instagram" | "tiktok" | "twitter">("instagram");
@@ -32,8 +30,12 @@ export default function CaptionGeneratorPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProducts();
-  }, [router]);
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated") {
+      fetchProducts();
+    }
+  }, [status, router]);
 
   const fetchProducts = async () => {
     try {
@@ -92,7 +94,7 @@ export default function CaptionGeneratorPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-2">

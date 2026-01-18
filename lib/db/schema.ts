@@ -15,6 +15,26 @@ export const users = pgTable('users', {
   passwordHash: text('password_hash').notNull(),
   emailVerified: boolean('email_verified').default(false),
   stripeAccountId: text('stripe_account_id'), // For payouts
+  // Brand Assets
+  logo: text('logo'),
+  brandColor: text('brand_color'),
+  typography: text('typography'),
+  theme: text('theme'),
+  // Social Links
+  instagram: text('instagram'),
+  twitter: text('twitter'),
+  tiktok: text('tiktok'),
+  youtube: text('youtube'),
+  linkedin: text('linkedin'),
+  // Domain Settings
+  slug: text('slug').unique(),
+  customDomain: text('custom_domain'),
+  domainType: text('domain_type'), // 'subdomain' or 'custom'
+  // Regional Settings
+  targetCountries: json('target_countries').$type<string[]>(),
+  language: text('language').default('en'),
+  timezone: text('timezone').default('America/New_York'),
+  dateOfBirth: text('date_of_birth'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,12 +19,17 @@ type Product = {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProducts();
-  }, [router]);
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated") {
+      fetchProducts();
+    }
+  }, [status, router]);
 
   const fetchProducts = async () => {
     try {
@@ -37,7 +43,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-2">
@@ -48,7 +54,7 @@ export default function DashboardPage() {
     );
   }
 
-  const username = "yourname";
+  const username = session?.user?.username || "yourname";
   const bioLinkUrl = `pagefairy.com/@${username}`;
   const activeProducts = products.filter(p => p.status === "active");
 
@@ -76,7 +82,7 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {username}!</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome back, {session?.user?.name || username}!</h1>
           <p className="text-muted-foreground">Here's your creator overview</p>
         </div>
 
